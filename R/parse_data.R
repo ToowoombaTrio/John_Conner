@@ -3,9 +3,6 @@
 #'This function automates parsing of temperature and precipitation for
 #'Queensland weather stations.
 #'
-#' @param
-#'
-#'
 #' @details
 #'Details about the resulting files go here
 #'
@@ -29,12 +26,12 @@
 #' \item{Category}{}
 #' \item{Forecast district}{}
 #' \item{sa_special}{}
-#'
-#'@note Users of these data should take into account the following }
+#'}
+#'@note Users of these data should take into account the following
 #'
 #' @examples
-#' \dontrun{
-#' #'
+#' \dontrun{}
+#'
 #'
 #' @references {}
 #'
@@ -43,14 +40,25 @@
 #' @importFrom data.table :=
 #'
 #' @export
+#'
 
-spatial <- readr::read_csv("data/BoM_ETA_20150501-20160430/spatial/StationData.csv")
-spatial <- spatial[spatial$REGION == "QLD", ]
+parse_data <- function() {
+  opt <- settings::options_manager(warn = 2, timeout = 300,
+                                   stringsAsFactors = FALSE)
+  f <- NULL
 
-day_files <- list.files("data/BoM_ETA_20150501-20160430/obs/")
-itx <- iterators::iter(day_files)
+  spatial <- data.table::fread("data/BoM_ETA_20150501-20160430/spatial/StationData.csv")
+  spatial <- spatial[spatial$REGION == "QLD", ]
 
-foreach::foreach(f = ity) %do% {
+  day_files <- list.files("data/BoM_ETA_20150501-20160430/obs/")
 
-day <- readr::read_csv(f)
+  itx <- iterators::iter(day_files)
 
+  foreach::foreach(f = itx) %do% {
+
+    day <- data.table::fread(f)
+
+
+  }
+  settings::reset(opt)
+}
