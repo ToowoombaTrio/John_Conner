@@ -45,20 +45,6 @@
 parse_data <- function() {
   opt <- settings::options_manager(warn = 2, timeout = 300,
                                    stringsAsFactors = FALSE)
-  f <- NULL
 
-  spatial <- data.table::fread("data/BoM_ETA_20150501-20160430/spatial/StationData.csv")
-  spatial <- spatial[spatial$REGION == "QLD", ]
-
-  day_files <- list.files("data/BoM_ETA_20150501-20160430/obs/")
-
-  itx <- iterators::iter(day_files)
-
-  foreach::foreach(f = itx) %do% {
-
-    day <- data.table::fread(f)
-
-
-  }
   settings::reset(opt)
 }

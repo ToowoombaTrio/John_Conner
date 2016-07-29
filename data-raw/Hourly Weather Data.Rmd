@@ -1,0 +1,43 @@
+---
+title: "Parse Weather Data for QLD and Select QLD Only Stations"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r load libraries}
+library(foreach)
+```
+
+## Import Station Spatial Data
+
+```{r QLD Stations, echo=TRUE, messages=FALSE}
+spatial <- readr::read_csv("BoM_ETA_20150501-20160430/spatial/StationData.csv")
+spatial <- spatial[spatial$REGION == "QLD", ]
+devtools::use_data(spatial, overwrite = TRUE, compress = "bzip2")
+```
+
+```{r}
+day_files <- list.files("BoM_ETA_20150501-20160430/obs/",
+                        full.names = TRUE)
+station_list <- vector(mode = "list", length(spatial))
+  
+itx <- iterators::iter(day_files)
+
+foreach::foreach(f = itx) %dopar% {
+  
+  day <- read.csv(f)
+  day[, 4] <- as.Date(as.POSIXct(day[, 4], origin = "1970-01-01"))
+  day[, 5] <- as.Date(as.POSIXct(day[, 5], origin = "1970-01-01"))
+  
+  # Join with spatial metadata
+  day <- dplyr::inner_join(day, spatial, by = "station_number")
+  
+  # Split stations out into a list of data frames and save to .rda file
+  ity <- iterators::iter(unique(day[, 1])) %do% {
+    foreach::foreach(g = ity)
+    station_list[[g]] <- day[day[, 1] == g, ]
+  }
+}
+```
