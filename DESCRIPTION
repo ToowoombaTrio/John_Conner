@@ -21,6 +21,7 @@ Imports:
     data.table,
     doParallel,
     foreach,
+    ggplot2,
     lubridate,
     iterators,
     parallel,
@@ -33,3 +34,6 @@ NeedsCompilation: no
 Repository: CRAN
 LazyData: TRUE
 ByteCompile: TRUE
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

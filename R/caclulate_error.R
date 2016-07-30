@@ -11,7 +11,6 @@
 #' @examples
 #' \dontrun{}
 #'
-#' @importFrom foreach %dopar%
 #'
 #' @export
 #'
@@ -32,7 +31,6 @@ rmse <- function(actual, predicted)
 #' @examples
 #' \dontrun{}
 #'
-#' @importFrom foreach %dopar%
 #'
 #' @export
 #'
