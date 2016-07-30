@@ -8,7 +8,7 @@ Authors@R: c(person("Adam", "Sparks", role = c("aut", "cre"),
     person("Keith", "Pembleton", role = "ctb",
     email = "keith.pembleton@usq.edu.au"),
     person("Gordon", "Grundy", role = "ctb",
-    email = "gordon.grundy@gmail.com"))
+    email = "gordongrundy@gmail.com"))
 Maintainer: Adam Sparks <adamhsparks@gmail.com>
 URL: https://github.com/ToowoombaTrio/John_Conner
 BugReports: https://github.com/ToowoombaTrio/John_Conner/issues
