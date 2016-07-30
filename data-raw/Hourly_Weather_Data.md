@@ -1,4 +1,4 @@
-Parse Weather Data for QLD and Select QLD Only Stations
+Select QLD Only Stations and Hourly Data
 ================
 
 ``` r

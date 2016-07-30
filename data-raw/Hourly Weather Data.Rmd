@@ -1,5 +1,5 @@
 ---
-title: "Parse Weather Data for QLD and Select QLD Only Stations"
+title: "Select QLD Only Stations and Hourly Data"
 output: github_document
 ---
 
