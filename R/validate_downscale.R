@@ -73,5 +73,5 @@ validate_downscale <- function() {
   )
   parallel::stopCluster(cl)
   settings::reset(opt)
-  
+  return(merged)
   }
