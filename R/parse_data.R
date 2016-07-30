@@ -31,29 +31,39 @@ fit_curves <- function(QLD_hourly_data) {
   utils::data("QLD_hourly_data", package = "JohnConner", envir = environment())
   QLD_hourly_data <- get("QLD_hourly_data", envir = environment())
   
+  utils::data("QLD_hourly_locations", package = "JohnConner",
+              envir = environment())
+  QLD_hourly_locations <- get("QLD_hourly_locations",
+                                      envir = environment())
+  
   for (i in seq_along(length(unique(QLD_SILO_and_hourly_stations[, 2])))) {
-       j <- QLD_SILO_and_hourly_stations[i, 2]
-       station <- QLD_hourly_data[[i]]
-       station <- day[day$station_number == j, ]
-       
-       temp <- station[station$parameter == "AIR_TEMP_MAX", ][, c(1, 4, 6)]
-       temp$TMN <- station[station$parameter == "AIR_TEMP_MIN", ][, 6]
-       temp$AVG <- station[station$parameter == "AIR_TEMP", ][, 6]
-       names(temp)[names(temp) == "value"] <- "TMX"
-       
-       # access array of SILO data ---------------------------------------------
-       Tmax <- my_array[, "T.Max", paste(j)]
-       Tmin <- my_array[, "T.Min", paste(j)]
-       JDay <- my_array[, "Day", paste(j)]
-       
-       df <- data.frame(Tmin, Tmax, JDay)
-       
-       lat <- spatial$LATITUDE[spatial$station_number == j]
-       
-       # Calculate hourly temps from SILO daily data ---------------------------
-       SILO_hourly <- make_hourly_temps(lat, df)
+    j <- QLD_SILO_and_hourly_stations[i, 2]
+    
+    station <- subset(QLD_hourly_data, station_number == j)
+    temp <- station[station$parameter == "AIR_TEMP", ][, c(1, 4, 6)]
+    temp[, 2] <- yday(temp[, 2])
+    names(temp) <- c("station_number", "JDay", "BoM_TMP")
+    
+    
+    # access array of SILO data ---------------------------------------------
+    Tmax <- my_array[, "T.Max", paste(j)]
+    Tmin <- my_array[, "T.Min", paste(j)]
+    JDay <- my_array[, "Day", paste(j)]
+    
+    df <- data.frame(Tmin, Tmax, JDay)
+    
+    lat <- QLD_hourly_locations$LATITUDE[QLD_hourly_locations$station_number == j]
+    
+    # Calculate hourly temps from SILO daily data ---------------------------
+    SILO_hourly <- chillR::make_hourly_temps(lat, df)
+    SILO_hourly <- tidyr::gather(SILO_hourly, Hour, SILO_TMP, Hour_1:Hour_24)[, -4]
+    
+    merged <- plyr::join(temp, SILO_hourly, type = "left")
+    
+    ggplot(merged, aes(x = SILO_TMP, y = BoM_TMP)) +
+      + stat_binhex()
   }
-       
-       settings::reset(opt)
-       
+  
+  settings::reset(opt)
+  
 }

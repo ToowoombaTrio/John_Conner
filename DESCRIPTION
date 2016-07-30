@@ -25,7 +25,8 @@ Imports:
     iterators,
     parallel,
     readr,
-    settings
+    settings,
+    tidyr
 RoxygenNote: 5.0.1
 Encoding: UTF-8
 NeedsCompilation: no
