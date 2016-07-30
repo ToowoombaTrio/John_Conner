@@ -6,8 +6,6 @@
 #' @details
 #'Details about the resulting files go here
 #'
-#' The CSV or ESRI format shapefile in the respective year-directory
-#' will contain the following fields/values:
 #' 
 #' @examples
 #' \dontrun{}
