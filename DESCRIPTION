@@ -1,0 +1,33 @@
+Package: JohnConner
+Type: Package
+Title: Toowoomba Trio Entry for Govhack2016
+Version: 0.0.1
+Date: 2016-07-29
+Authors@R: c(person("Adam", "Sparks", role = c("aut", "cre"),
+    email = "adamhsparks@gmail.com"),
+    person("Keith", "Pembleton", role = "ctb",
+    email = "keith.pembleton@usq.edu.au"),
+    person("Gordon", "Grundy", role = "ctb",
+    email = "gordon.grundy@gmail.com"))
+Maintainer: Adam Sparks <adamhsparks@gmail.com>
+URL: https://github.com/ToowoombaTrio/John_Conner
+BugReports: https://github.com/ToowoombaTrio/John_Conner/issues
+Description: It's a thing that we're part of for a thing we're doing together as the Toowoomba Trio!
+Depends:
+    R (>= 3.2.0)
+License: MIT + file LICENSE
+Imports:
+    data.table,
+    doParallel,
+    foreach,
+    lubridate,
+    iterators,
+    parallel,
+    readr,
+    settings
+RoxygenNote: 5.0.1
+Encoding: UTF-8
+NeedsCompilation: no
+Repository: CRAN
+LazyData: TRUE
+ByteCompile: TRUE
