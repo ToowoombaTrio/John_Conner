@@ -32,6 +32,10 @@ QLD_hourly_data <- (foreach::foreach(f = itx) %dopar% {
   QLD_hourly_data[[f]] <- day[day$station_number %in% QLD_hourly_locations$station_number == TRUE, ]
 })
 
+# Combine list into single data frame
+QLD_hourly_data <- plyr::rbind.fill(QLD_hourly_data)
+
+# Write list into .rda file for use with R package
 devtools::use_data(QLD_hourly_data, overwrite = TRUE, compress = "bzip2")
 ```
 

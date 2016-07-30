@@ -41,6 +41,10 @@ spatial <- spatial[spatial$station_number %in% testdf$site, ]
 
 number_of_sites <- length(spatial$station_number)
 number_of_sites
+
+QLD_SILO_and_hourly_stations <- spatial
+
+devtools::use_data(QLD_SILO_and_hourly_stations, overwrite = TRUE, compress = "bzip2")
 ```
 
 ```{r,  messages=FALSE, results='hide'}
