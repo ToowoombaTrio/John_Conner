@@ -20,7 +20,7 @@ hours_of_high_temps
 df<-data.frame(header_info,hours_of_high_temps,station_info$LATITUDE,station_info$LONGITUDE)
 head(df)
 
-install.packages("raster")
+#install.packages("raster")
 #libarys required for mapping
 library("reshape")
 library(fields)
@@ -31,8 +31,9 @@ spline <- Tps(data.frame(df$station_info.LONGITUDE, df$station_info.LATITUDE), d
 grid <- predictSurface(spline, nx = 2000, ny = 2000)
 predict(spline, cbind(151.9507,-27.5598))
 
-
+png(filename="QLDmap.png", height=20, width=17, units="cm", res=100)
 #plot qld outline and the surface over the top of surface
+
 yaxis<-c(-30,-10)
 xaxis<-c(135,155)
 border2<-read.csv("qld2.csv")
@@ -43,9 +44,12 @@ polygon(border2$x, border2$y, col="white", border="white")
 polygon(border$x, border$y,)
 
 
+dev.off()
+
+
 #send email abut specific locations
 our_email<-"toowoombatrio@gmail.com"
-
+attachmentName <- "QLDmap.png"
 #subscribers deatils
 
 # do not use this as it will wipe over our subscriber data base susbscribers <- data.frame(email=character(), Location=character(), lat=numeric(), lon=numeric(), stringsAsFactors=FALSE) 
@@ -75,6 +79,7 @@ send.mail(from = sender,
           to = recipients,
           subject = "Hours of heat stress yesterday",
           body = body_text,
+          attach.files = attachmentName,
           smtp = list(host.name = "smtp.gmail.com", port = 465, 
                       user.name = "toowoombatrio@gmail.com",            
                       passwd = "qwertyytrewq", ssl = TRUE),
@@ -82,6 +87,8 @@ send.mail(from = sender,
           send = TRUE)
 
 }
+file.remove("QLDmap.png")
+
 
 
 
