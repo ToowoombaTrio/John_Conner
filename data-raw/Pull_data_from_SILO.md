@@ -1,14 +1,7 @@
----
-title: "Pull Data from Silo"
-output: github_document
----
+Pull Data from Silo
+================
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r,  messages=FALSE}
-
+``` r
 #headers for SILO file
 headers <- c("Date", "Day", "Date2", "T.Max", "Smx", "T.Min", "Smn", "Rain",
              "Srn", "Evap", "Sev", "Radn", "Ssl", "VP", "Svp", "RHmaxT",
@@ -21,7 +14,38 @@ spatial <- readr::read_csv("BoM_ETA_20150501-20160430/spatial/StationData.csv")
 spatial <- spatial[spatial$REGION == "QLD", ]
 
 head(spatial)
+```
 
+    ##     WMO_NUM station_number   station_name LATITUDE LONGITUDE  STN_HT
+    ## 147   94170          27045     WEIPA AERO -12.6778  141.9208  17.960
+    ## 148   94182          27054 COCONUT ISLAND -10.0511  143.0686   3.500
+    ## 149   94174          27058    HORN ISLAND -10.5844  142.2900   4.000
+    ## 150   94183          27073   COEN AIRPORT -13.7606  143.1183 159.300
+    ## 151   94171          27075  SCHERGER RAAF -12.6167  142.0869  39.341
+    ## 152   94276          28004    PALMERVILLE -16.0008  144.0758 203.800
+    ##     AVIATION_ID REGION GridPt Lat GridPt Lon MSAS elevation
+    ## 147        YBWP    QLD     -12.66     141.92          13.04
+    ## 148        YCCT    QLD     -10.03     143.08           0.00
+    ## 149        YHID    QLD     -10.57     142.29           7.56
+    ## 150        YCOE    QLD     -13.74     143.13         159.44
+    ## 151        YBSG    QLD     -12.62     142.08          30.92
+    ## 152        YPVI    QLD     -15.99     144.08         215.56
+    ##     Distance from GridPt Roughness Distance from coast    Category
+    ## 147                  1.3       7.8                  10       coast
+    ## 148                  1.9       0.0                 -22         sea
+    ## 149                  0.2       8.0                   6       coast
+    ## 150                  1.4      38.3                  50 flat_inland
+    ## 151                  1.0      11.6                  27 flat_inland
+    ## 152                  0.8      28.1                 143 flat_inland
+    ##     forecast_district sa_special
+    ## 147         QLD_PW001       <NA>
+    ## 148         QLD_PW001       <NA>
+    ## 149         QLD_PW001       <NA>
+    ## 150         QLD_PW001       <NA>
+    ## 151         QLD_PW001       <NA>
+    ## 152         QLD_PW001       <NA>
+
+``` r
 testdf <- data.frame(site = NA, run = NA)
 
 # check access to each site
@@ -33,7 +57,12 @@ tryCatch(for (station_number in spatial$station_number) {
   site_data <- read.table(URL, skip = 16)
   testdf <- rbind(testdf, c(station_number, site_data[1, 1]))
 }, error = function(x) cat(paste0("\nYou've reached the end of stations available in this data set. The testdf data frame is complete.")))
+```
 
+    ## 
+    ## You've reached the end of stations available in this data set. The testdf data frame is complete.
+
+``` r
 testdf <- subset(testdf, run == 15)
 
 # Select only stations that are available from SILO
@@ -43,7 +72,9 @@ number_of_sites <- length(spatial$station_number)
 number_of_sites
 ```
 
-```{r,  messages=FALSE, results='hide'}
+    ## [1] 75
+
+``` r
 # establish the dates to be working within
 # enter how many days to look back
 look_back <- 7
@@ -65,13 +96,34 @@ for (i in spatial$station_number) {
   site_data <- data.matrix(site_data) 
   my_array[,, site_number] <- site_data 
 }
-
 ```
 
-```{r, map, messages=FALSE}
+``` r
 #libarys required for mapping
 library("reshape")
 library("fields")
+```
+
+    ## Loading required package: spam
+
+    ## Loading required package: grid
+
+    ## Spam version 1.3-0 (2015-10-24) is loaded.
+    ## Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+    ## and overview of this package.
+    ## Help for individual functions is also obtained by adding the
+    ## suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+
+    ## 
+    ## Attaching package: 'spam'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     backsolve, forwardsolve
+
+    ## Loading required package: maps
+
+``` r
 library("RgoogleMaps")
 
 #plot qld outline and the surface over the top of surface
@@ -87,5 +139,6 @@ polygon(border$x, border$y)
 
 #add the stations to the plot
 points(spatial$LONGITUDE, spatial$LATITUDE, type = "p", pch = 19)
-
 ```
+
+![](Pull_data_from_SILO_files/figure-markdown_github/map-1.png)
