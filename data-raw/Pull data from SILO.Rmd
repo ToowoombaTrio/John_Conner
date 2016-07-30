@@ -1,0 +1,70 @@
+---
+title: "Pull Data from Silo"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+#headers for SILO file
+headers <- c("Date", "Day", "Date2", "T.Max", "Smx", "T.Min", "Smn", "Rain", "Srn", "Evap", "Sev", "Radn", "Ssl", "VP", "Svp", "RHmaxT", "RHminT", "FAO56")
+
+#get site details from the csv file
+
+spatial <- readr::read_csv("BoM_ETA_20150501-20160430/spatial/StationData.csv")
+spatial <- spatial[spatial$REGION == "QLD", ]
+
+head(spatial)
+number_of_sites <- length(spatial$station_number)
+number_of_sites
+
+#establish the dates to be working within
+#enter how many days to look back
+look_back <- 7
+dates <- c(Sys.Date() - (look_back), Sys.Date() - 1)
+dates <- as.character(dates)
+dates <- gsub("-", "", dates)
+dates
+
+
+#creates the data cube
+my_array <- array(data = NA, dim = c(look_back, 18, number_of_sites),
+                  dimnames = list(NULL, headers, spatial$station_number))
+my_array
+
+ptm <- proc.time()
+for (site in spatial$station_number) {
+  site_number <- as.character(site)
+  URL <- paste("https://www.longpaddock.qld.gov.au/cgi-bin/silo/PatchedPointDataset.php?format=fao56&station=", site_number, "&start=", dates[1], "&finish=", dates[2], "&username=USQKEITH&password=KEITH4350")
+  URL <- gsub(" ", "", URL) 
+  site_data <- read.table(URL, skip = 41)
+  colnames(site_data) <- headers
+  site_data <- data.matrix(site_data) 
+  my_array[,, site_number] <- site_data 
+}
+proc.time() - ptm
+
+#libarys required for mapping
+library("reshape")
+library("fields")
+library("RgoogleMaps")
+
+#plot qld outline and the surface over the top of surface
+yaxis <- c(-30, -10)
+xaxis <- c(135, 155)
+border2 <- read.csv("qld2.csv")
+border <- read.csv("qld.csv")
+plot(border$x, border$y, type = "n", axes = "False", xlim = xaxis, ylim = yaxis,
+     xlab = "", ylab = "")
+polygon(border2$x, border2$y, col = "white", border = "white")
+polygon(border$x, border$y,)
+
+#add the stations to the plot
+points(spatial$LONGITUDE, spatial$LATITUDE, type = "p", pch = 19)
+
+
+```
