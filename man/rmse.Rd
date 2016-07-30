@@ -7,14 +7,15 @@
 rmse(actual, predicted)
 }
 \description{
-Function that returns Root Mean Square Error (RMSE)
+Function that calculates Root Mean Square Error (RMSE)
 }
 \details{
 Details go here
 }
 \examples{
-\dontrun{}
-
+actual <- c(4, 6, 9, 10, 4, 6, 4, 7, 8, 7)
+predicted <- c(5, 6, 8, 10, 4, 8, 4, 9, 8, 9)
+rmse(actual, predicted)
 
 }
 

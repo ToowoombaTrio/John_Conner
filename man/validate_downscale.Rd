@@ -11,10 +11,13 @@ This function automates parsing of temperature and precipitation for
 Queensland weather stations.
 }
 \details{
-Details about the resulting files go here
+An R function which formats Australian Bureau of Meteorology (BoM) hourly
+weather data and Queensland's Scientific Information for Land Owners (SILO)
+daily weather data for validation of temporal downscaling of SILO temperature
+data to hourly values.
 }
 \examples{
-\dontrun{}
+\dontrun{validate_downscale()}
 
 }
 

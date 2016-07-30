@@ -4,17 +4,18 @@
 #'Queensland weather stations.
 #'
 #' @details
-#'Details about the resulting files go here
-#'
+#'An R function which formats Australian Bureau of Meteorology (BoM) hourly
+#'weather data and Queensland's Scientific Information for Land Owners (SILO)
+#'daily weather data for validation of temporal downscaling of SILO temperature
+#'data to hourly values.
 #' 
 #' @examples
-#' \dontrun{}
+#' \dontrun{validate_downscale()}
 #'
 #' @importFrom foreach %dopar%
 #'
 #' @export
 #'
-
 validate_downscale <- function() {
   opt <- settings::options_manager(warn = 2, timeout = 300,
                                    stringsAsFactors = FALSE)

@@ -7,13 +7,13 @@
 mae(actual, predicted)
 }
 \description{
-Function that returns Root Mean Absolute Error (MAE)
-}
-\details{
-Details go here
+Function that calculates Root Mean Absolute Error (MAE)
 }
 \examples{
-\dontrun{}
+# Example data
+actual <- c(4, 6, 9, 10, 4, 6, 4, 7, 8, 7)
+predicted <- c(5, 6, 8, 10, 4, 8, 4, 9, 8, 9)
+mae(actual, predicted)
 
 
 }
