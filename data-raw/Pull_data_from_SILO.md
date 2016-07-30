@@ -77,20 +77,17 @@ number_of_sites
 ``` r
 # establish the dates to be working within
 # enter how many days to look back
-look_back <- 7
-dates <- c(Sys.Date() - (look_back), Sys.Date() - 1)
-dates <- as.character(dates)
+
+dates <- c("2015-04-30", "2016-04-29")
 dates <- gsub("-", "", dates)
-dates
 
 # creates the data cube
-my_array <- array(data = NA, dim = c(look_back, 18, number_of_sites),
+my_array <- array(data = NA, dim = c(366, 18, number_of_sites),
                   dimnames = list(NULL, headers, spatial$station_number))
 
 for (i in spatial$station_number) {
   site_number <- as.character(i)
-  URL <- paste("https://www.longpaddock.qld.gov.au/cgi-bin/silo/PatchedPointDataset.php?format=fao56&station=", i, "&start=", dates[1], "&finish=", dates[2], "&username=USQKEITH&password=KEITH4350")
-  URL <- gsub(" ", "", URL) 
+  URL <- paste0("https://www.longpaddock.qld.gov.au/cgi-bin/silo/PatchedPointDataset.php?format=fao56&station=", i, "&start=", dates[1], "&finish=", dates[2], "&username=USQKEITH&password=KEITH4350")
   site_data <- read.table(URL, skip = 41)
   colnames(site_data) <- headers
   site_data <- data.matrix(site_data) 
