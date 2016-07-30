@@ -75,6 +75,14 @@ number_of_sites
     ## [1] 75
 
 ``` r
+QLD_SILO_and_hourly_stations <- spatial
+
+devtools::use_data(QLD_SILO_and_hourly_stations, overwrite = TRUE, compress = "bzip2")
+```
+
+    ## Saving QLD_SILO_and_hourly_stations as QLD_SILO_and_hourly_stations.rda to /Users/asparks/Development/JohnConner/data
+
+``` r
 # establish the dates to be working within
 # enter how many days to look back
 
@@ -82,7 +90,7 @@ dates <- c("2015-04-30", "2016-04-29")
 dates <- gsub("-", "", dates)
 
 # creates the data cube
-my_array <- array(data = NA, dim = c(366, 18, number_of_sites),
+SILO_array <- array(data = NA, dim = c(366, 18, number_of_sites),
                   dimnames = list(NULL, headers, spatial$station_number))
 
 for (i in spatial$station_number) {
@@ -91,9 +99,12 @@ for (i in spatial$station_number) {
   site_data <- read.table(URL, skip = 41)
   colnames(site_data) <- headers
   site_data <- data.matrix(site_data) 
-  my_array[,, site_number] <- site_data 
+  SILO_array[,, site_number] <- site_data 
 }
+devtools::use_data(SILO_array, overwrite = TRUE, compress = "bzip2")
 ```
+
+    ## Saving SILO_array as SILO_array.rda to /Users/asparks/Development/JohnConner/data
 
 ``` r
 #libarys required for mapping
