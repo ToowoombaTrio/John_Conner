@@ -10,13 +10,13 @@
 #'data to hourly values.
 #' 
 #' @examples
-#' \dontrun{validate_downscale()}
+#' \dontrun{downscale()}
 #'
 #' @importFrom foreach %dopar%
 #'
 #' @export
 #'
-validate_downscale <- function() {
+downscale <- function() {
   opt <- settings::options_manager(warn = 2, timeout = 300,
                                    stringsAsFactors = FALSE)
   

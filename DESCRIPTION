@@ -27,7 +27,8 @@ Imports:
     parallel,
     readr,
     settings,
-    tidyr
+    tidyr,
+    viridis
 RoxygenNote: 5.0.1
 Encoding: UTF-8
 NeedsCompilation: no
