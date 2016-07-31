@@ -71,15 +71,24 @@ devtools::use_data(SILO_array, overwrite = TRUE, compress = "bzip2")
 
 ```{r, map, messages=FALSE}
 #libarys required for mapping
-library("reshape")
-library("fields")
-library("RgoogleMaps")
+library("raster")
+library("ggplot2")
+library("rgeos")
+library("maptools")
+library("rgdal")
 
 #plot qld outline and the surface over the top of surface
-yaxis <- c(-30, -10)
-xaxis <- c(135, 155)
-border2 <- read.csv("qld2.csv")
-border <- read.csv("qld.csv")
+Oz <- getData(name = "GADM", download = TRUE, country = "AUS", level = 1)
+
+# Subset Australia data to QLD
+QLD <- Oz[Oz@data$NAME_1 == "Queensland", ]
+QLD <- thinnedSpatialPoly(QLD, tolerance = 0.05, minarea = 0.001)
+
+QLD <- fortify(QLD, region = "ID_1", id = "ID_1")
+
+ggplot(QLD, aes(x = long, y = lat)) +
+  geom_polygon(fill = "#cccccc") +
+  geom_point(data = spatial, aes(x = "LONGITUDE", y = "LATITUDE"))
 
 plot(border$x, border$y, type = "n", axes = "False", xlim = xaxis, ylim = yaxis,
      xlab = "", ylab = "")
