@@ -2,19 +2,21 @@
 % Please edit documentation in R/plot_validations.R
 \name{plot_density}
 \alias{plot_density}
-\title{Visualise downscaled data}
+\title{Visualise fit of downscaled data}
 \usage{
 plot_density(BoM_SILO_data)
 }
-\description{
-Function that returns Root Mean Square Error (RMSE)
+\arguments{
+\item{BoM_SILO_data}{Data object generated from using \code{downscale} to
+generate hourly downscaled weather data from daily SILO data along with BoM
+hourly data for validation}
 }
-\details{
-Details go here
+\description{
+Function that creates a hexbin density graph of observed versus predicted
+hourly values.
 }
 \examples{
-\dontrun{}
-
+\dontrun{plot_density(BoM_SILO_data)}
 
 }
 

@@ -1,5 +1,0 @@
-"email" "my_location_name" "mylat" "mylon"
-"1" "Keith.Pembleton@usq.edu.au" "Toowoomba" 151.9507 -27.5598
-"2" "gordongrundy@gmail.com" "Gatton" 152.28 -27.5636
-"3" "Adam.Sparks@usq.edu.au" "Dalby" 151.266 -27.1944
-"4" "Adam.Sparks@usq.edu.au" "Dalby" 151.266 -27.1944

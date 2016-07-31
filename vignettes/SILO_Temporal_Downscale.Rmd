@@ -90,15 +90,13 @@ our_email <- "toowoombatrio@gmail.com"
 attachmentName <- "QLDmap.png"
 #subscribers details
 
-susbscribers <- read_table("../data-raw/susbscribers.txt")
-
 library(mailR)
 
-for (value in susbscribers$run) {
-  email <- as.character(susbscribers[value,1])
-  location <- as.character(susbscribers[value,2])
-  lat <- as.numeric(susbscribers[value,3])
-  lon <- as.numeric(susbscribers[value,4])
+for (value in subscribers$run) {
+  email <- as.character(subscribers[value,1])
+  location <- as.character(subscribers[value,2])
+  lat <- as.numeric(subscribers[value,3])
+  lon <- as.numeric(subscribers[value,4])
   hours_of_heat_stress <- as.character(round(predict(spline, cbind(lat,lon)),0))
   body_text <- paste("Hello from the Toowoomba Trio Your crops at",
                      location, "recieved",

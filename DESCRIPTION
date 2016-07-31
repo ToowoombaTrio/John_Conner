@@ -2,7 +2,7 @@ Package: JohnConner
 Type: Package
 Title: Toowoomba Trio Entry for Govhack2016
 Version: 0.0.1
-Date: 2016-07-29
+Date: 2016-07-31
 Authors@R: c(person("Adam", "Sparks", role = c("aut", "cre"),
     email = "adamhsparks@gmail.com"),
     person("Keith", "Pembleton", role = "ctb",
@@ -12,7 +12,7 @@ Authors@R: c(person("Adam", "Sparks", role = c("aut", "cre"),
 Maintainer: Adam Sparks <adamhsparks@gmail.com>
 URL: https://github.com/ToowoombaTrio/John_Conner
 BugReports: https://github.com/ToowoombaTrio/John_Conner/issues
-Description: It's a thing that we're part of for a thing we're doing together as the Toowoomba Trio!
+Description: Use QLD SILO data to generate hourly data. Validated using BoM data.
 Depends:
     R (>= 3.2.0)
 License: MIT + file LICENSE
@@ -20,12 +20,17 @@ Imports:
     chillR,
     data.table,
     doParallel,
+    fields,
     foreach,
     ggplot2,
     lubridate,
     iterators,
+    mailR,
     parallel,
+    plyr,
+    raster,
     readr,
+    reshape,
     settings,
     tidyr,
     viridis

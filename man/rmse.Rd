@@ -6,6 +6,11 @@
 \usage{
 rmse(actual, predicted)
 }
+\arguments{
+\item{actual}{observed values}
+
+\item{predicted}{predicted values}
+}
 \description{
 Function that calculates Root Mean Square Error (RMSE)
 }

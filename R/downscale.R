@@ -17,6 +17,14 @@
 #' @export
 #'
 downscale <- function() {
+  
+  station_number <- NULL
+  Hour <- NULL
+  SILO_TMP <- NULL
+  BoM_TMP <- NULL
+  Hour_01 <- NULL
+  Hour_24 <- NULL
+  
   opt <- settings::options_manager(warn = 2, timeout = 300,
                                    stringsAsFactors = FALSE)
   
@@ -41,7 +49,7 @@ downscale <- function() {
   
   itx <- iterators::iter(1:nrow(QLD_SILO_and_hourly_stations))
   
-  cl <- parallel::makeCluster(parallel::detectCores() - 2)
+  cl <- parallel::makeCluster(2)
   doParallel::registerDoParallel(cl)
   
   merged <- as.data.frame(data.table::rbindlist(
