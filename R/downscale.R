@@ -37,6 +37,7 @@ downscale <- function() {
   SILO_array <- get("SILO_array", envir = environment())
   i <- NULL
   j <- NULL
+  temp2 <- vector(mode = "list")
   
   itx <- iterators::iter(1:nrow(QLD_SILO_and_hourly_stations))
   
@@ -50,7 +51,14 @@ downscale <- function() {
         station <- subset(QLD_hourly_data, station_number == paste(j))
         temp <- station[station$parameter == "AIR_TEMP", ][, c(1, 4, 6)]
         temp[, 2] <- lubridate::yday(temp[, 2])
-        names(temp) <- c("station_number", "JDay", "BoM_TMP")
+        temp[, 4] <- rep(c("Hour_01", "Hour_02", "Hour_03", "Hour_04", "Hour_05",
+                       "Hour_06", "Hour_07", "Hour_08", "Hour_09", "Hour_10",
+                       "Hour_11", "Hour_12", "Hour_13", "Hour_14", "Hour_15",
+                       "Hour_16", "Hour_17", "Hour_18", "Hour_19", "Hour_20",
+                       "Hour_21", "Hour_22", "Hour_23", "Hour_24"),
+                       length.out = nrow(temp))
+        names(temp) <- c("station_number", "JDay", "BoM_TMP", "Hour")
+        
         
         # access array of SILO data ---------------------------------------------
         Tmax <- SILO_array[, "T.Max", paste(j)]
@@ -63,10 +71,25 @@ downscale <- function() {
         
         # Calculate hourly temps from SILO daily data ---------------------------
         SILO_hourly <- chillR::make_hourly_temps(lat, df)
+        SILO_hourly$station_number <- as.character(rep(j, nrow(SILO_hourly)))
+        names(SILO_hourly) <- c("Tmin", "Tmax", "JDay", "Hour_01", "Hour_02",
+                                "Hour_03", "Hour_04", "Hour_05", "Hour_06",
+                                "Hour_07", "Hour_08", "Hour_09", "Hour_10",
+                                "Hour_11", "Hour_12", "Hour_13", "Hour_14",
+                                "Hour_15", "Hour_16", "Hour_17", "Hour_18",
+                                "Hour_19", "Hour_20", "Hour_21", "Hour_22",
+                                "Hour_23", "Hour_24", "station_number")
         SILO_hourly <- tidyr::gather(SILO_hourly, Hour, SILO_TMP,
-                                     Hour_1:Hour_24)[, -4]
+                                     Hour_01:Hour_24)
+        SILO_hourly <- SILO_hourly[, -c(1:2)]
         
-        plyr::join(temp, SILO_hourly, type = "left")
+        SILO_hourly <- plyr::arrange(SILO_hourly, JDay, Hour)
+        temp <- plyr::arrange(temp, JDay, Hour)
+        
+        temp2[[i]] <- plyr::join(temp, SILO_hourly, 
+                                               by = c("station_number", "JDay",
+                                                      "Hour"), type = "left")
+        
       }
     )
   )

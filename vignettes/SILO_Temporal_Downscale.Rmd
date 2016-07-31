@@ -6,75 +6,84 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
-  ---
+  \usepackage[utf8]{inputenc}
+---
   
-  # Downscale SILO Hourly Data and Visualise Quality of Predictions
+# Downscale SILO Hourly Data and Visualise Quality of Predictions
   
-```{r}
+This document illustrates the useage of the JohnConner R package to downscale
+Queenslan SILO weather data from daily to hourly and send an e-mail alert to
+subscribers, warning them of heat stress to their crop.
   
-library(JohnConner)
-BoM_SILO_data <- downscale()
-plot_density(BoM_SILO_data)
-
+```{r, fig.width=5, fig.height=5}
+  
+  library(JohnConner)
+  BoM_SILO_data <- downscale()
+  plot_density(BoM_SILO_data)
+  
 ```
-
+  
 ## Check Error
+  
 ```{r}
-rmse(BoM_SILO_data[, 3], BoM_SILO_data[, 6])
+  
+rmse(BoM_SILO_data[, 3], BoM_SILO_data[, 5])
 
-mae(BoM_SILO_data[, 3], BoM_SILO_data[, 6])
+mae(BoM_SILO_data[, 3], BoM_SILO_data[, 5])
+
 ```
 
 ## Generate Map of Heat Stress
 
-```{r}
+```{r, fig.width=5, fig.height=6}
 library(raster)
 library(fields)
 library(reshape)
 library(readr)
 
-hourlyT <- BoM_SILO_data[, 6]
+hourlyT <- BoM_SILO_data[, c(1:2, 4:5)]
 head(hourlyT)
+hourlyT$hour <- substr(hourlyT[, 3], 6, 7)
+hourlyT <- subset(hourlyT, hourlyT$JDay == 1)[, -3]
+
+hourlyT <- melt(hourlyT, id.vars = c("station_number", "hour", "JDay"), measure.vars = "SILO_TMP")
+hourlyT <- cast(hourlyT, hour~station_number, fun = "mean")
+
 head(QLD_SILO_and_hourly_stations)
 
 header_info <- QLD_SILO_and_hourly_stations[, 2]
 
-temp_threshold <- 10
+temp_threshold <- 30
 
 hours_of_high_temps <- c()
 
-for (x in length(hourlyT)) {
-  hours_of_high_temps <- c(hours_of_high_temps,
-                           length(hourlyT[, x][hourlyT[, x] > temp_threshold]))
+for (x in names(hourlyT[, 2:71])) {
+  hours_of_high_temps <- c(hours_of_high_temps, length(hourlyT[, x][hourlyT[, x] > temp_threshold]))
 }
-hours_of_high_temps
 
-df <- data.frame(header_info, hours_of_high_temps, QLD_SILO_and_hourly_stations$LATITUDE,
-                 QLD_SILO_and_hourly_stations$LONGITUDE)
+high_temps <- data.frame(names(hourlyT[, 2:71]), as.numeric(hours_of_high_temps))
+names(high_temps) <- c("station_number", "hours_of_high_temps")
+
+df <- plyr::join(high_temps, QLD_SILO_and_hourly_stations, by = "station_number", type = "left")
 head(df)
 
 # create the surface to plot
-spline <- Tps(data.frame(df$QLD_SILO_and_hourly_stations.LONGITUDE,
-                         df$QLD_SILO_and_hourly_stations.LATITUDE),
-              df$hours_of_high_temps)
+
+spline <- Tps(data.frame(df$LONGITUDE, df$LATITUDE), df$hours_of_high_temps)
 grid <- predictSurface(spline, nx = 2000, ny = 2000)
 predict(spline, cbind(151.9507, -27.5598))
 
-png(filename = "QLDmap.png", height = 20, width = 17, units = "cm", res = 100)
-# plot qld outline and the surface over the top of surface
+Oz <- getData("GADM", country = "AUS", level = 1)
+QLD <- Oz[Oz@data$NAME_1 == "Queensland", ]
 
-yaxis <- c(-30, -10)
-xaxis <- c(135, 155)
-border2 <- read_csv("../data-raw/qld2.csv")
-border <- read_csv("../data-raw/qld.csv")
-plot(border$x, border$y, type = "n", axes = "False", xlim = xaxis,
-     ylim = yaxis, xlab = "", ylab = "")
-image.plot(grid, horizontal = TRUE, add = TRUE)
-polygon(border2$x, border2$y, col = "white", border = "white")
-polygon(border$x, border$y)
+image.plot(grid, horizontal = TRUE)
+plot(QLD, add = TRUE)
+```
 
-dev.off()
+# Automated e-mails to subscribers
+
+```{r}
+
 
 # send email abut specific locations
 our_email <- "toowoombatrio@gmail.com"
@@ -110,6 +119,5 @@ for (value in susbscribers$run) {
             send = TRUE)
   
 }
-file.remove("QLDmap.png")
 
 ```

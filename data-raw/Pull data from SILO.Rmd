@@ -28,8 +28,7 @@ testdf <- data.frame(site = NA, run = NA)
 
 tryCatch(for (station_number in spatial$station_number) {
   site_number <- as.character(station_number)
-  URL <- paste("https://www.longpaddock.qld.gov.au/cgi-bin/silo/PatchedPointDataset.php?format=fao56&station=", site_number, "&start=20160101&finish=20160102&username=USQKEITH&password=KEITH4350")
-  URL <- gsub(" ", "", URL) 
+  URL <- paste0("https://www.longpaddock.qld.gov.au/cgi-bin/silo/PatchedPointDataset.php?format=fao56&station=", site_number, "&start=20160101&finish=20160102&username=USQKEITH&password=KEITH4350")
   site_data <- read.table(URL, skip = 16)
   testdf <- rbind(testdf, c(station_number, site_data[1, 1]))
 }, error = function(x) cat(paste0("\nYou've reached the end of stations available in this data set. The testdf data frame is complete.")))
@@ -38,6 +37,7 @@ testdf <- subset(testdf, run == 15)
 
 # Select only stations that are available from SILO
 spatial <- spatial[spatial$station_number %in% testdf$site, ]
+spatial <- subset(spatial, station_number != 29039 & station_number != 40284 & station_number != 40651 & station_number != 41097 & station_number != 45009)
 
 number_of_sites <- length(spatial$station_number)
 number_of_sites
