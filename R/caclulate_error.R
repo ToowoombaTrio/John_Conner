@@ -1,4 +1,4 @@
-#' Calcuate Root Mean Square Error
+#' Calculate Root Mean Square Error
 #'
 #'Function that calculates Root Mean Square Error (RMSE)
 #' @param actual observed values
@@ -19,10 +19,10 @@ rmse <- function(actual, predicted)
   sqrt(mean(error ^ 2))
 }
 
-#' Calcuate Root Mean Absolute Error
+#' Calculate Root Mean Absolute Error
 #'
 #'Function that calculates Root Mean Absolute Error (MAE)
-#' 
+#'
 #' @param actual observed values
 #' @param predicted predicted values
 #' @examples

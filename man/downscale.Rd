@@ -20,4 +20,3 @@ data to hourly values.
 \dontrun{downscale()}
 
 }
-

@@ -2,7 +2,7 @@
 % Please edit documentation in R/caclulate_error.R
 \name{rmse}
 \alias{rmse}
-\title{Calcuate Root Mean Square Error}
+\title{Calculate Root Mean Square Error}
 \usage{
 rmse(actual, predicted)
 }
@@ -23,4 +23,3 @@ predicted <- c(5, 6, 8, 10, 4, 8, 4, 9, 8, 9)
 rmse(actual, predicted)
 
 }
-

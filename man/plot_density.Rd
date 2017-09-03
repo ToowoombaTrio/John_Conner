@@ -19,4 +19,3 @@ hourly values.
 \dontrun{plot_density(BoM_SILO_data)}
 
 }
-

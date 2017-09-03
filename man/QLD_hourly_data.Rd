@@ -28,4 +28,3 @@ QLD_hourly_data
 QLD_hourly_data
 }
 \keyword{datasets}
-
